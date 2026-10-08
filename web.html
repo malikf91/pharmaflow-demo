@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>PharmaFlow Web Demo</title>
+<style>
+:root{--bg:#f4f7f6;--card:#fff;--ink:#17302b;--mute:#6b7f7a;--line:#e1e9e6;--brand:#0f7b6c;--brand2:#e6f4f1;--warn:#c77700;--warn2:#fff3dc;--bad:#c0392b;--bad2:#fdeaea;--ok:#1e8a4c;--ok2:#e5f6ec;--adv:#6a4fc4;--adv2:#efeafb}
+@media (prefers-color-scheme:dark){:root{--bg:#10191a;--card:#172324;--ink:#e6f0ee;--mute:#8fa5a0;--line:#26393a;--brand:#35b3a1;--brand2:#12312e;--warn:#f0a63a;--warn2:#33291a;--bad:#ef6f61;--bad2:#3a1d1a;--ok:#4fc283;--ok2:#14301f;--adv:#a590f0;--adv2:#262040}}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit;color:inherit}
+.app{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+aside{background:var(--card);border-right:1px solid var(--line);padding:16px 10px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo{font-weight:700;font-size:17px;color:var(--brand);padding:4px 10px 14px}
+.nav a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--ink);cursor:pointer;margin-bottom:2px}
+.nav a:hover{background:var(--brand2)}
+.nav a.on{background:var(--brand2);color:var(--brand);font-weight:600}
+.nav .grp{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);padding:14px 10px 4px}
+.nav a.lock{color:var(--mute)}
+.pill{font-size:10px;padding:1px 6px;border-radius:99px;background:var(--adv2);color:var(--adv);margin-left:auto}
+header{display:flex;gap:12px;align-items:center;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header .sp{flex:1}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;padding:6px 12px;cursor:pointer}
+.seg button.on{background:var(--brand);color:#fff}
+.seg.adv button.on{background:var(--adv)}
+select,input{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:7px 10px}
+main{padding:22px 24px;max-width:1150px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--mute);margin-bottom:18px}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.card h3{margin:0 0 10px;font-size:14px}
+.kpi .l{color:var(--mute);font-size:12px}.kpi .v{font-size:24px;font-weight:700;margin-top:2px}.kpi .d{font-size:12px;color:var(--ok)}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--mute);text-align:left;font-weight:500;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line)}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.b-ok{background:var(--ok2);color:var(--ok)}.b-warn{background:var(--warn2);color:var(--warn)}.b-bad{background:var(--bad2);color:var(--bad)}.b-adv{background:var(--adv2);color:var(--adv)}
+.btn{border:1px solid var(--line);background:var(--card);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{border-color:var(--brand)}
+.btn.p{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.a{background:var(--adv);color:#fff;border-color:var(--adv)}
+.btn.sm{padding:3px 9px;font-size:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.tabs button{border:0;background:none;padding:8px 14px;cursor:pointer;color:var(--mute);border-bottom:2px solid transparent}
+.tabs button.on{color:var(--brand);border-color:var(--brand);font-weight:600}
+.bars{display:flex;align-items:flex-end;gap:10px;height:130px;padding-top:6px}
+.bars div{flex:1;text-align:center;font-size:11px;color:var(--mute)}
+.bars i{display:block;background:var(--brand);border-radius:5px 5px 0 0;margin-bottom:4px;opacity:.85}
+.alert{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.alert:last-child{border:0}
+.pos{display:grid;grid-template-columns:1.1fr 1fr;gap:14px}
+@media(max-width:900px){.app{grid-template-columns:1fr}aside{position:static;height:auto}.pos{grid-template-columns:1fr}}
+.res{max-height:300px;overflow:auto}
+.res .it{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid var(--line);cursor:pointer;border-radius:6px}
+.res .it:hover{background:var(--brand2)}
+.muted{color:var(--mute)}.small{font-size:12px}
+.total{font-size:26px;font-weight:700}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:20;padding:16px}
+.modal .box{background:var(--card);border-radius:14px;padding:20px;width:100%;max-width:440px;max-height:90vh;overflow:auto}
+.modal label{display:block;font-size:12px;color:var(--mute);margin:10px 0 3px}
+.modal input,.modal select{width:100%}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:30;max-width:90vw}
+.up{text-align:center;padding:40px 20px}
+.up .big{font-size:34px}
+.chip{border:1px solid var(--line);background:var(--card);padding:4px 12px;border-radius:99px;cursor:pointer;font-size:13px}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.res .it.hl,tr.hl{background:var(--brand2);outline:1px solid var(--brand)}
+.kb{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;font-size:12px;color:var(--mute)}
+kbd{background:var(--card);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 6px;font:11px ui-monospace,monospace;color:var(--ink)}
+.hb{display:flex;align-items:center;gap:8px;margin:7px 0}.hb .lbl{width:150px;font-size:13px}.hb .tr{flex:1;background:var(--line);height:10px;border-radius:99px;overflow:hidden}.hb .tr i{display:block;height:100%;background:var(--brand)}
+.tile{cursor:pointer}.tile:hover{border-color:var(--brand)}
+.tog{display:inline-block;width:34px;height:20px;border-radius:99px;background:var(--line);position:relative;cursor:pointer}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.tog.on{background:var(--ok)}.tog.on::after{left:16px}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="logo">⚕ PharmaFlow</div>
+    <div class="nav" id="nav"></div>
+  </aside>
+  <div>
+    <header>
+      <b id="shopname">Al-Shifa Medical Store</b>
+      <select id="branch" onchange="setBranch(this.value)" style="display:none"></select>
+      <span class="sp"></span>
+      <span class="small muted">Demo plan:</span>
+      <div class="seg" id="tierseg"><button data-t="basic" class="on">Basic</button><button data-t="adv">Advanced I</button></div>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
+<div id="layer"></div>
+
+<script>
+// ---------- demo data (illustrative only) ----------
+const TODAY = new Date(2026,9,7);
+const catalogue = [
+ ['Panadol 500mg','Paracetamol','Tablet','GSK'],['Panadol Extra','Paracetamol + Caffeine','Tablet','GSK'],
+ ['Calpol 120mg/5ml','Paracetamol','Syrup','GSK'],['Brufen 400mg','Ibuprofen','Tablet','Abbott'],
+ ['Augmentin 625mg','Amoxicillin + Clavulanate','Tablet','GSK'],['Amoxil 500mg','Amoxicillin','Capsule','GSK'],
+ ['Risek 20mg','Omeprazole','Capsule','Getz'],['Nexium 40mg','Esomeprazole','Tablet','AstraZeneca'],
+ ['Flagyl 400mg','Metronidazole','Tablet','Sanofi'],['Glucophage 500mg','Metformin','Tablet','Merck'],
+ ['Concor 5mg','Bisoprolol','Tablet','Merck'],['Ventolin Inhaler','Salbutamol','Inhaler','GSK'],
+ ['Arinac Forte','Ibuprofen + Pseudoephedrine','Tablet','Abbott'],['Surbex Z','Multivitamin + Zinc','Tablet','Abbott']
+];
+let items = [
+ {id:1,name:'Panadol 500mg',gen:'Paracetamol',form:'Tablet',per:20,stock:640,price:60,batch:'B2291',exp:'2027-08'},
+ {id:2,name:'Brufen 400mg',gen:'Ibuprofen',form:'Tablet',per:20,stock:200,price:140,batch:'A7712',exp:'2027-03'},
+ {id:3,name:'Augmentin 625mg',gen:'Amoxicillin + Clavulanate',form:'Tablet',per:6,stock:0,price:520,batch:'—',exp:'—'},
+ {id:4,name:'Amoxil 500mg',gen:'Amoxicillin',form:'Capsule',per:12,stock:96,price:210,batch:'C1180',exp:'2026-12'},
+ {id:5,name:'Risek 20mg',gen:'Omeprazole',form:'Capsule',per:14,stock:280,price:260,batch:'R5521',exp:'2027-06'},
+ {id:6,name:'Calpol 120mg/5ml',gen:'Paracetamol',form:'Syrup',per:1,stock:4,price:185,batch:'S3301',exp:'2026-11'},
+ {id:7,name:'Glucophage 500mg',gen:'Metformin',form:'Tablet',per:30,stock:360,price:175,batch:'G0044',exp:'2028-01'},
+ {id:8,name:'Flagyl 400mg',gen:'Metronidazole',form:'Tablet',per:20,stock:60,price:95,batch:'F9120',exp:'2026-10'},
+ {id:9,name:'Ventolin Inhaler',gen:'Salbutamol',form:'Inhaler',per:1,stock:9,price:650,batch:'V2208',exp:'2027-09'},
+ {id:11,name:'Clavam 625mg',gen:'Amoxicillin + Clavulanate',form:'Tablet',per:6,stock:48,price:480,batch:'L4410',exp:'2027-05'},
+ {id:10,name:'Concor 5mg',gen:'Bisoprolol',form:'Tablet',per:30,stock:150,price:430,batch:'K1197',exp:'2027-11'}
+];
+items.forEach(i=>i.reorder=i.per>1?i.per*5:3);
+items.push({id:12,name:'Surbex Z',gen:'Multivitamin + Zinc',form:'Tablet',per:30,stock:240,price:320,batch:'Z0912',exp:'2026-12',reorder:150},{id:13,name:'Arinac Forte',gen:'Ibuprofen + Pseudoephedrine',form:'Tablet',per:20,stock:200,price:120,batch:'N3350',exp:'2026-11',reorder:100});
+items.forEach(i=>i.bc='89600'+String(1000+i.id*7));
+let nextId=14;
+let customers=[
+ {n:'Mr. Tariq Hussain',ph:'0300-1234567',bal:4200,days:21,refill:null},
+ {n:'Mrs. Ayesha Khan',ph:'0321-7654321',bal:1850,days:6,refill:{med:'Glucophage 500mg',due:'in 2 days'}},
+ {n:'Haji Rafiq',ph:'0333-9988776',bal:9600,days:45,refill:{med:'Concor 5mg',due:'today'}},
+ {n:'Bilal Ahmed',ph:'0345-1122334',bal:700,days:3,refill:null}
+];
+let suppliers=[{n:'Alpha Distributors',bal:86000,due:'12 Oct'},{n:'Medi Link Traders',bal:42500,due:'15 Oct'},{n:'City Pharma Wholesale',bal:18200,due:'25 Oct'}];
+let expenses=[
+ {t:'Monthly',c:'Shop rent',a:65000,d:'1 Oct'},{t:'Monthly',c:'Electricity',a:18400,d:'3 Oct'},
+ {t:'Daily',c:'Tea & cleaning',a:450,d:'7 Oct'},{t:'Ad-hoc',c:'AC repair',a:7500,d:'5 Oct'},{t:'Monthly',c:'Internet',a:3000,d:'2 Oct'}
+];
+let staff=[
+ {n:'Usman Ali',r:'Pharmacist',sal:60000,adv:0,bon:5000,pres:true,leave:0},
+ {n:'Saad Mehmood',r:'Cashier',sal:38000,adv:5000,bon:0,pres:true,leave:1},
+ {n:'Imran Shah',r:'Sales Assistant',sal:32000,adv:0,bon:2000,pres:false,leave:2},
+ {n:'Waqas',r:'Delivery / Helper',sal:28000,adv:3000,bon:0,pres:true,leave:0}
+];
+const branches={all:{n:'All branches',mult:1},g:{n:'Gulberg (Main)',mult:.5},j:{n:'Johar Town',mult:.3},m:{n:'Model Town',mult:.2}};
+let state={tier:'basic',page:'dash',branch:'g',cart:[],q:'',tab:{},inv:'all',pay:'Cash'};
+
+const rs=n=>'Rs '+Math.round(n).toLocaleString('en-PK');
+const $=s=>document.querySelector(s);
+const isAdv=()=>state.tier==='adv';
+
+// ---------- derived ----------
+function expDays(e){if(!/\d{4}-\d{2}/.test(e))return 9999;const[y,m]=e.split('-').map(Number);return Math.round((new Date(y,m,0)-TODAY)/864e5)}
+function status(i){const d=expDays(i.exp);if(i.stock===0)return['Out of stock','b-bad'];if(d<0)return['Expired','b-bad'];if(d<=90)return['Expiring '+i.exp,'b-warn'];if(i.stock<=i.reorder*(i.per>1?1:1))return['Low stock','b-warn'];return['OK','b-ok']}
+function stockTxt(i){if(i.per===1)return i.stock+' pcs';const p=Math.floor(i.stock/i.per),l=i.stock%i.per;return p+' packs'+(l?' + '+l+' loose':'')}
+
+// ---------- nav ----------
+const NAV=[
+ {g:'Daily'},{id:'dash',t:'🏠 Dashboard'},{id:'pos',t:'🧾 Sell (POS)'},{id:'inv',t:'📦 Stock'},
+ {g:'Money'},{id:'khata',t:'📒 Khata & Dues'},{id:'exp',t:'💸 Expenses'},{id:'staff',t:'👥 Staff & Payroll'},{id:'rep',t:'📊 Reports'},
+ {g:'Advanced I',adv:true},{id:'ctrl',t:'🔒 Controlled Drugs',adv:true},{id:'audit',t:'🛡 Permissions & Audit',adv:true}
+];
+function renderNav(){
+  $('#nav').innerHTML=NAV.map(n=>{
+    if(n.g)return `<div class="grp">${n.g}</div>`;
+    const lock=n.adv&&!isAdv();
+    return `<a class="${state.page===n.id?'on':''} ${lock?'lock':''}" onclick="go('${n.id}')">${n.t}${lock?'<span class="pill">🔒</span>':''}</a>`}).join('');
+  $('#tierseg').className='seg'+(isAdv()?' adv':'');
+  document.querySelectorAll('#tierseg button').forEach(b=>b.classList.toggle('on',b.dataset.t===state.tier));
+  const br=$('#branch');br.style.display=isAdv()?'':'none';
+  br.innerHTML=Object.entries(branches).map(([k,v])=>`<option value="${k}" ${state.branch===k?'selected':''}>${v.n}</option>`).join('');
+}
+document.querySelectorAll('#tierseg button').forEach(b=>b.onclick=()=>{state.tier=b.dataset.t;if(!isAdv()&&['ctrl','audit'].includes(state.page)){}render()});
+function go(p){state.page=p;if(p==='rep')state.rep=null;render()}
+function setBranch(b){state.branch=b;render()}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+function modal(html){$('#layer').innerHTML=`<div class="modal" onclick="if(event.target===this)closeM()"><div class="box">${html}</div></div>`}
+function closeM(){$('#layer').innerHTML='';state.receipt=false;if(state.page==='pos'&&$('#q'))$('#q').focus()}
+function tabs(key,list,def){const cur=state.tab[key]||def;return `<div class="tabs">${list.map(([k,t])=>`<button class="${cur===k?'on':''}" onclick="state.tab['${key}']='${k}';render()">${t}</button>`).join('')}</div>`}
+function upsell(title,pts){return `<div class="card up"><div class="big">🔒</div><h1>${title}</h1><p class="muted">Available in <b>Advanced I</b></p><ul style="display:inline-block;text-align:left">${pts.map(p=>`<li>${p}</li>`).join('')}</ul><div><button class="btn a" onclick="state.tier='adv';render()">Preview Advanced I</button></div></div>`}
+
+// ---------- pages ----------
+const P={};
+P.dash=()=>{
+  const b=branches[isAdv()?state.branch:'g'];const m=isAdv()?b.mult:1;
+  const sales=Math.round(84500*m*(isAdv()?2:1)/(isAdv()?1:1)), profit=Math.round(sales*.19);
+  const low=items.filter(i=>i.stock>0&&i.stock<=i.reorder).length+items.filter(i=>i.stock===0).length;
+  const exp=items.filter(i=>expDays(i.exp)<=90&&i.stock>0).length;
+  const recv=customers.reduce((a,c)=>a+c.bal,0), pay=suppliers.reduce((a,s)=>a+s.bal,0);
+  const days=['Thu','Fri','Sat','Sun','Mon','Tue','Wed'],vals=[.8,1,.9,.7,1.1,.95,1];
+  let h=`<h1>Good morning, Hamza 👋</h1><div class="sub">${isAdv()?b.n:'Al-Shifa Medical Store'} · Wednesday, 7 October 2026</div>
+  <div class="grid g4">
+   <div class="card kpi"><div class="l">Today's sales</div><div class="v">${rs(sales)}</div><div class="d">▲ 8% vs yesterday</div></div>
+   <div class="card kpi"><div class="l">Today's profit</div><div class="v">${rs(profit)}</div><div class="d">19% margin</div></div>
+   <div class="card kpi"><div class="l">Cash in drawer</div><div class="v">${rs(sales*.55)}</div><div class="l">Opened with Rs 10,000</div></div>
+   <div class="card kpi"><div class="l">Customers owe you</div><div class="v">${rs(recv)}</div><div class="l">You owe suppliers ${rs(pay)}</div></div>
+  </div><br><div class="grid g2">
+   <div class="card"><h3>Last 7 days sales</h3><div class="bars">${vals.map((v,i)=>`<div><i style="height:${v*90}px"></i>${days[i]}</div>`).join('')}</div></div>
+   <div class="card"><h3>Needs attention</h3>
+     <div class="alert"><span>📉 Low / out of stock</span><span><b>${low}</b> items <a class="btn sm" onclick="state.inv='low';go('inv')">View</a></span></div>
+     <div class="alert"><span>⏳ Expiring within 90 days</span><span><b>${exp}</b> items <a class="btn sm" onclick="state.inv='exp';go('inv')">View</a></span></div>
+     <div class="alert"><span>🏭 Supplier payment due</span><span><b>Rs 86,000</b> by 12 Oct <a class="btn sm" onclick="go('khata')">Pay</a></span></div>
+     <div class="alert"><span>📒 Overdue khata (&gt;30 days)</span><span><b>1</b> customer <a class="btn sm" onclick="go('khata')">Remind</a></span></div>
+   </div></div>`;
+  if(isAdv()&&state.branch==='all')h+=`<br><div class="card"><h3>Branch comparison (today)</h3><table><tr><th>Branch</th><th class="r">Sales</th><th class="r">Profit</th><th class="r">Expiring items</th><th class="r">Cash</th></tr>
+   ${['g','j','m'].map(k=>{const s=Math.round(169000*branches[k].mult);return `<tr><td>${branches[k].n}</td><td class="r">${rs(s)}</td><td class="r">${rs(s*.19)}</td><td class="r">${k==='g'?4:k==='j'?2:1}</td><td class="r">${rs(s*.55)}</td></tr>`}).join('')}</table></div>`;
+  if(!isAdv())h+=`<br><div class="card" style="background:var(--adv2);border-color:transparent"><b style="color:var(--adv)">Growing?</b> <span class="muted">Advanced I adds multiple branches, barcode scan, controlled-drug register and approvals.</span> <a class="btn sm a" onclick="state.tier='adv';render()">Preview</a></div>`;
+  return h};
+
+// POS
+let billNo=2232;
+let held=[];
+let bills=[{no:2231,t:'10:42',cust:'Walk-in',amt:3450,by:'Saad'},{no:2230,t:'10:31',cust:'Mrs. Ayesha Khan',amt:1850,by:'Usman'},{no:2229,t:'10:20',cust:'Walk-in',amt:720,by:'Saad'}];
+Object.assign(state,{sel:0,csel:-1,cust:'Walk-in',disc:0,recv:'',fq:null,receipt:false});
+const billId=n=>'INV-'+String(n).padStart(6,'0');
+const PAYS=['Cash','Card','Wallet','Khata'];
+function unitPrice(l){const i=items.find(x=>x.id===l.id);return l.unit==='pack'?i.price:i.price/i.per}
+function lineAmt(l){return Math.round(unitPrice(l)*l.qty)}
+function cartTotal(){return state.cart.reduce((a,l)=>a+lineAmt(l),0)}
+function netTotal(){return Math.max(0,cartTotal()-(state.disc||0))}
+function posResults(){
+  const q=state.q.trim().toLowerCase();
+  return items.filter(i=>!q||i.name.toLowerCase().includes(q)||i.gen.toLowerCase().includes(q)||i.bc.includes(q)).slice(0,8)}
+function resHTML(){
+  const res=posResults();if(state.sel>=res.length)state.sel=Math.max(0,res.length-1);
+  return res.map((i,ix)=>{const s=status(i);return `<div class="it ${ix===state.sel?'hl':''}" onclick="addCart(${i.id})"><div><b>${i.name}</b><div class="small muted">${i.gen} · ${i.form} · ${stockTxt(i)} · <span style="opacity:.7">${i.bc}</span></div></div><div style="text-align:right">${rs(i.price)}<div><span class="badge ${s[1]}">${s[0]}</span></div></div></div>`}).join('')||'<p class="muted" style="padding:8px">No match. <a class="btn sm" onclick="addMed()">+ Add medicine</a></p>'}
+P.pos=()=>{
+  const total=netTotal(),recv=+state.recv||0;
+  const kb=[['F2','Search'],['↑↓','Pick'],['Enter','Add'],['F3','Pack/Tablet'],['F4','Discount'],['F6','Hold'],['F7','Held'],['F8','Payment'],['F9','Complete'],['F10','Recent bills']];
+  return `<div class="row" style="justify-content:space-between;margin-bottom:10px"><div><h1 style="display:inline">Sell</h1> <span class="badge b-ok" style="font-size:13px">${billId(billNo)}</span></div>
+   <div class="row small muted"><span>07 Oct 2026 · 10:48</span><span>Cashier: <b>Saad Mehmood</b></span><span>Customer:</span>
+   <select id="cust" onchange="state.cust=this.value">${['Walk-in'].concat(customers.map(c=>c.n)).map(n=>`<option ${state.cust===n?'selected':''}>${n}</option>`).join('')}</select></div></div>
+  <div class="pos"><div class="card">
+    <div class="row"><input id="q" style="flex:1" autocomplete="off" placeholder="Type name / generic, or scan barcode, then Enter…" value="${state.q}" oninput="state.q=this.value;state.sel=0;$('#res').innerHTML=resHTML()">
+    ${isAdv()?'<button class="btn a" onclick="scan()">▥ Scan 2D code</button>':''}</div>
+    <div class="res" id="res" style="margin-top:10px">${resHTML()}</div>
+  </div>
+  <div class="card"><h3>Current bill · ${state.cart.length} item${state.cart.length===1?'':'s'}</h3>
+   ${state.cart.length?`<table><tr><th>#</th><th>Item</th><th>Unit</th><th>Qty</th><th class="r">Amount</th><th></th></tr>${state.cart.map((l,ix)=>{const i=items.find(x=>x.id===l.id);return `<tr class="${ix===state.csel?'hl':''}" onclick="state.csel=${ix}"><td class="muted">${ix+1}</td><td><b>${i.name}</b><div class="small muted">${rs(unitPrice(l))} each</div></td>
+     <td>${i.per>1?`<select onchange="state.cart[${ix}].unit=this.value;render()" style="padding:2px 6px"><option value="pack" ${l.unit==='pack'?'selected':''}>Pack (${i.per})</option><option value="loose" ${l.unit==='loose'?'selected':''}>Tablet</option></select>`:'Piece'}</td>
+     <td><input id="qty${ix}" type="number" min="1" value="${l.qty}" style="width:64px" onchange="state.cart[${ix}].qty=Math.max(1,+this.value||1);render()" onkeydown="if(event.key==='Enter'){event.preventDefault();event.stopPropagation();state.cart[${ix}].qty=Math.max(1,+this.value||1);state.fq=null;render();$('#q').focus()}"></td><td class="r">${rs(lineAmt(l))}</td><td><a onclick="state.cart.splice(${ix},1);state.csel=-1;render()" style="cursor:pointer">✕</a></td></tr>`}).join('')}</table>`:'<p class="muted">Search and press Enter to add. After adding, type the quantity and press Enter to return to search.</p>'}
+   <hr style="border:0;border-top:1px solid var(--line)">
+   <div class="row" style="justify-content:space-between"><span>Subtotal</span><span>${rs(cartTotal())}</span></div>
+   <div class="row" style="justify-content:space-between;margin-top:6px"><span>Discount (Rs)</span><input id="disc" type="number" min="0" value="${state.disc||0}" style="width:110px" onchange="state.disc=+this.value||0;render()" onkeydown="if(event.key==='Enter'){this.blur()}"></div>
+   <div class="row" style="justify-content:space-between;margin:10px 0"><span>Total</span><span class="total">${rs(total)}</span></div>
+   <div class="row">${PAYS.map(p=>`<span class="chip ${state.pay===p?'on':''}" onclick="state.pay='${p}';render()">${p}</span>`).join('')}</div>
+   ${state.pay==='Cash'?`<div class="row" style="margin-top:10px"><span class="muted small">Received</span><input id="recv" type="number" value="${state.recv}" style="width:110px" oninput="state.recv=this.value;$('#chg').textContent=rs(Math.max(0,(+this.value||0)-netTotal()))"><span class="muted small">Change</span><b id="chg">${rs(Math.max(0,recv-total))}</b></div>`:''}
+   <div class="row" style="margin-top:12px"><button class="btn p" style="flex:1;padding:10px" onclick="checkout()">Complete sale (F9)</button><button class="btn" onclick="holdBill()">Hold (F6)</button><button class="btn" onclick="newBill()">Clear</button></div>
+  </div></div>
+  <div class="kb">${kb.map(k=>`<span><kbd>${k[0]}</kbd> ${k[1]}</span>`).join('')}<span><kbd>Alt+↑↓</kbd> Select line</span><span><kbd>Del</kbd> Remove line</span><span><kbd>+</kbd><kbd>−</kbd> Qty</span></div>`};
+function newBill(){state.cart=[];state.disc=0;state.recv='';state.cust='Walk-in';state.q='';state.csel=-1;state.sel=0;render()}
+function holdBill(){if(!state.cart.length)return toast('Nothing to hold');held.push({cart:state.cart,cust:state.cust,disc:state.disc,t:'10:48'});newBill();toast('Bill held. Press F7 to resume.')}
+function showHeld(){modal(`<h3>Held bills</h3>${held.length?held.map((h,ix)=>`<div class="alert"><span><b>${h.cart.length} item(s)</b> · ${h.cust}<div class="small muted">held at ${h.t}</div></span><button class="btn sm p" onclick="resume(${ix})">Resume</button></div>`).join(''):'<p class="muted">No held bills.</p>'}<br><button class="btn" onclick="closeM()">Close (Esc)</button>`)}
+function resume(ix){const h=held.splice(ix,1)[0];state.cart=h.cart;state.cust=h.cust;state.disc=h.disc;closeM();render()}
+function showRecent(){modal(`<h3>Recent bills</h3>${bills.slice(0,6).map(b=>`<div class="alert"><span><b>${billId(b.no)}</b> · ${rs(b.amt)}<div class="small muted">${b.t} · ${b.cust} · ${b.by}</div></span><button class="btn sm" onclick="closeM();toast('Return flow would open for ${billId(b.no)}')">Return</button></div>`).join('')}<br><button class="btn" onclick="closeM()">Close (Esc)</button>`)}
+function addCart(id){const i=items.find(x=>x.id===id);
+  if(i.stock===0){
+    if(isAdv()){const subs=items.filter(x=>x.id!==id&&x.stock>0&&x.gen===i.gen);
+      return modal(`<h3>${i.name} is out of stock</h3><p class="muted small">Same salt: ${i.gen}</p>${subs.length?subs.map(s=>`<div class="alert"><span><b>${s.name}</b><div class="small muted">${stockTxt(s)} · ${rs(s.price)}</div></span><button class="btn sm p" onclick="closeM();addCart(${s.id})">Use this</button></div>`).join(''):'<p>No alternative with the same salt in stock.</p>'}<br><button class="btn" onclick="closeM()">Close</button>`)}
+    return toast('Out of stock')}
+  let ix=state.cart.findIndex(l=>l.id===id);if(ix>=0)state.cart[ix].qty++;else{state.cart.push({id,unit:'pack',qty:1});ix=state.cart.length-1}
+  state.csel=ix;state.q='';state.sel=0;state.fq=ix;render()}
+function scan(){const i=items[0];modal(`<h3>▥ Scanned 2D code</h3><p class="muted small">Read from the pack – nothing typed.</p><table><tr><td class="muted">Product</td><td><b>${i.name}</b></td></tr><tr><td class="muted">Manufacturer</td><td>GSK</td></tr><tr><td class="muted">Batch</td><td>B2291</td></tr><tr><td class="muted">Expiry</td><td>08/2027</td></tr><tr><td class="muted">Serial</td><td>0100…8821 (verified ✓)</td></tr></table><br><div class="row"><button class="btn a" onclick="closeM();addCart(1)">Add to bill</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+function checkout(){if(!state.cart.length)return toast('Bill is empty');
+  const t=netTotal();
+  if(state.pay==='Khata'&&state.cust==='Walk-in')return toast('Pick a customer for khata sale');
+  const recv=+state.recv||0;if(state.pay==='Cash'&&recv&&recv<t)return toast('Received amount is less than total');
+  const lines=state.cart.map(l=>{const i=items.find(x=>x.id===l.id);return {n:i.name,u:l.unit==='pack'?'pack':'tab',q:l.qty,a:lineAmt(l)}});
+  const sub=cartTotal(),disc=state.disc||0,no=billNo,cust=state.cust,pay=state.pay;
+  state.cart.forEach(l=>{const i=items.find(x=>x.id===l.id);i.stock=Math.max(0,i.stock-(l.unit==='pack'?l.qty*i.per:l.qty))});
+  if(pay==='Khata'){const c=customers.find(x=>x.n===cust);if(c)c.bal+=t}
+  bills.unshift({no,t:'10:48',cust,amt:t,by:'Saad'});billNo++;
+  state.cart=[];state.disc=0;state.recv='';state.q='';state.cust='Walk-in';state.csel=-1;state.receipt=true;render();
+  modal(`<div style="text-align:center"><b>Al-Shifa Medical Store</b><div class="small muted">Gulberg, Lahore · Ph 042-1234567</div></div><hr style="border:0;border-top:1px dashed var(--line)">
+   <div class="small row" style="justify-content:space-between"><span>${billId(no)}</span><span>07 Oct 2026 10:48</span></div><div class="small muted">Customer: ${cust} · Cashier: Saad</div>
+   <table style="margin:8px 0">${lines.map(l=>`<tr><td>${l.n}<div class="small muted">${l.q} ${l.u}</div></td><td class="r">${rs(l.a)}</td></tr>`).join('')}</table>
+   <div class="small row" style="justify-content:space-between"><span>Subtotal</span><span>${rs(sub)}</span></div>${disc?`<div class="small row" style="justify-content:space-between"><span>Discount</span><span>− ${rs(disc)}</span></div>`:''}
+   <div class="row" style="justify-content:space-between"><b>Total (${pay})</b><b class="total" style="font-size:20px">${rs(t)}</b></div>${pay==='Cash'&&recv?`<div class="small row" style="justify-content:space-between"><span>Received ${rs(recv)}</span><span>Change ${rs(Math.max(0,recv-t))}</span></div>`:''}
+   <p class="small muted" style="text-align:center">Thank you · Please check expiry before use</p><div class="row"><button class="btn" style="flex:1" onclick="toast('Sent to printer')">🖨 Print</button><button class="btn p" style="flex:1" onclick="closeM()">New bill (Enter)</button></div>`)}
+
+// keyboard
+document.addEventListener('keydown',e=>{
+  const open=$('#layer .modal');
+  if(open){if(e.key==='Escape'||(state.receipt&&e.key==='Enter')){e.preventDefault();closeM()}return}
+  if(state.page!=='pos')return;
+  const k=e.key,inQ=document.activeElement&&document.activeElement.id==='q';
+  const F={F2:()=>$('#q').focus(),F3:()=>{const ix=state.csel>=0?state.csel:state.cart.length-1;if(ix>=0&&items.find(x=>x.id===state.cart[ix].id).per>1){state.cart[ix].unit=state.cart[ix].unit==='pack'?'loose':'pack';render()}},
+   F4:()=>{$('#disc').focus();$('#disc').select()},F6:holdBill,F7:showHeld,F8:()=>{state.pay=PAYS[(PAYS.indexOf(state.pay)+1)%PAYS.length];render()},F9:checkout,F10:showRecent};
+  if(F[k]){e.preventDefault();F[k]();return}
+  if(k==='Enter'&&e.ctrlKey){e.preventDefault();checkout();return}
+  if(k==='ArrowDown'&&e.altKey||k==='ArrowUp'&&e.altKey){e.preventDefault();if(!state.cart.length)return;state.csel=Math.max(0,Math.min(state.cart.length-1,(state.csel<0?state.cart.length-1:state.csel)+(k==='ArrowDown'?1:-1)));render();return}
+  if(inQ){
+    if(k==='ArrowDown'||k==='ArrowUp'){e.preventDefault();const n=posResults().length;state.sel=Math.max(0,Math.min(n-1,state.sel+(k==='ArrowDown'?1:-1)));$('#res').innerHTML=resHTML();return}
+    if(k==='Enter'){e.preventDefault();const q=state.q.trim(),ex=items.find(i=>i.bc===q);const r=ex||posResults()[state.sel];if(r)addCart(r.id);return}
+    if(k==='Escape'){state.q='';state.sel=0;$('#q').value='';$('#res').innerHTML=resHTML();return}
+    if(state.q===''&&(k==='+'||k==='-')){e.preventDefault();const ix=state.csel>=0?state.csel:state.cart.length-1;if(ix>=0){state.cart[ix].qty=Math.max(1,state.cart[ix].qty+(k==='+'?1:-1));render()}return}
+    if(state.q===''&&k==='Delete'){e.preventDefault();const ix=state.csel>=0?state.csel:state.cart.length-1;if(ix>=0){state.cart.splice(ix,1);state.csel=-1;render()}}
+  }
+});
+
+// Stock
+P.inv=()=>{
+  const f=state.inv;let list=items.slice();
+  if(f==='low')list=list.filter(i=>i.stock<=i.reorder);if(f==='exp')list=list.filter(i=>expDays(i.exp)<=90&&i.stock>0);
+  const q=(state.iq||'').toLowerCase();if(q)list=list.filter(i=>i.name.toLowerCase().includes(q)||i.gen.toLowerCase().includes(q));
+  return `<h1>Stock</h1><div class="sub">${items.length} medicines in your shop · catalogue of 40,000+ registered products available</div>
+  <div class="row" style="margin-bottom:12px"><input id="iq" placeholder="Search stock…" value="${state.iq||''}" oninput="state.iq=this.value;renderKeep2()" style="flex:1;min-width:200px">
+   ${[['all','All'],['low','Low stock'],['exp','Expiring']].map(([k,t])=>`<span class="chip ${f===k?'on':''}" onclick="state.inv='${k}';render()">${t}</span>`).join('')}
+   ${isAdv()?'<button class="btn a" onclick="scan()">▥ Scan to receive</button>':''}
+   <button class="btn p" onclick="addMed()">+ Add medicine</button></div>
+  <div class="card" style="padding:6px 10px"><table><tr><th>Medicine</th><th>Form</th><th>Stock</th><th>Batch / Expiry</th><th class="r">Price (pack)</th><th>Status</th></tr>
+  ${list.map(i=>{const s=status(i);return `<tr><td><b>${i.name}</b><div class="small muted">${i.gen}</div></td><td>${i.form}</td><td>${stockTxt(i)}</td><td>${i.batch} · ${i.exp}</td><td class="r">${rs(i.price)}</td><td><span class="badge ${s[1]}">${s[0]}</span></td></tr>`}).join('')||'<tr><td colspan=6 class="muted">Nothing here 🎉</td></tr>'}</table></div>`};
+function renderKeep2(){const v=state.iq;render();const e=$('#iq');if(e){e.focus();e.setSelectionRange(v.length,v.length)}}
+function addMed(){
+  modal(`<h3>Add medicine</h3><label>Search catalogue (type 3+ letters)</label><input id="cs" placeholder="e.g. risek, ventolin, metformin" oninput="catSearch(this.value)">
+  <div id="cres" class="res" style="max-height:140px"></div>
+  <div id="cform" style="display:none"><div class="row" style="gap:8px"><div style="flex:1"><label>Quantity (packs)</label><input id="f_q" type="number" value="10"></div><div style="flex:1"><label>Pack size</label><input id="f_p" type="number" value="10"></div></div>
+  <div class="row" style="gap:8px"><div style="flex:1"><label>Batch</label><input id="f_b" value="NEW-001"></div><div style="flex:1"><label>Expiry (YYYY-MM)</label><input id="f_e" value="2028-06"></div></div>
+  <label>Sale price per pack (Rs)</label><input id="f_pr" type="number" value="150"></div><br>
+  <div class="row"><button class="btn p" id="saveMed" style="display:none" onclick="saveMed()">Add to stock</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+let picked=null;
+function catSearch(v){v=v.toLowerCase();const r=v.length<3?[]:catalogue.filter(c=>c[0].toLowerCase().includes(v)||c[1].toLowerCase().includes(v));
+  $('#cres').innerHTML=r.map((c,ix)=>`<div class="it" onclick="pickCat('${c[0]}')"><div><b>${c[0]}</b><div class="small muted">${c[1]} · ${c[2]} · ${c[3]}</div></div><span class="badge b-ok">DRAP</span></div>`).join('')||(v.length>=3?'<p class="muted small">Not in catalogue – add manually.</p>':'')}
+function pickCat(n){picked=catalogue.find(c=>c[0]===n);$('#cres').innerHTML=`<div class="alert"><span><b>${picked[0]}</b><div class="small muted">${picked[1]} · ${picked[2]} · ${picked[3]}</div></span><span class="badge b-ok">Selected</span></div>`;$('#cform').style.display='';$('#saveMed').style.display=''}
+function saveMed(){const p=+$('#f_p').value||1;items.push({id:nextId++,name:picked[0],gen:picked[1],form:picked[2],per:p,stock:(+$('#f_q').value||0)*p,price:+$('#f_pr').value||0,batch:$('#f_b').value,exp:$('#f_e').value,reorder:p>1?p*5:3});closeM();toast(picked[0]+' added to stock');state.iq='';render()}
+
+// Khata & dues
+P.khata=()=>{
+  const cur=state.tab.k||'c';
+  let h=`<h1>Khata & Dues</h1><div class="sub">Who owes you, and whom you owe</div>`+tabs('k',[['c','Customers owe me'],['s','I owe suppliers']].concat(isAdv()?[['r','Refill reminders']]:[]),'c');
+  if(cur==='c')h+=`<div class="card"><table><tr><th>Customer</th><th>Phone</th><th>Last bill</th><th class="r">Balance</th><th></th></tr>${customers.map((c,ix)=>`<tr><td><b>${c.n}</b></td><td>${c.ph}</td><td>${c.days} days ago ${c.days>30?'<span class="badge b-bad">Overdue</span>':''}</td><td class="r"><b>${rs(c.bal)}</b></td><td class="r"><button class="btn sm" onclick="remind('${c.n}')">WhatsApp reminder</button> <button class="btn sm p" onclick="recv(${ix})">Receive</button></td></tr>`).join('')}</table></div>`;
+  if(cur==='s')h+=`<div class="card"><table><tr><th>Supplier</th><th>Due date</th><th class="r">Balance</th><th></th></tr>${suppliers.map((s,ix)=>`<tr><td><b>${s.n}</b></td><td>${s.due}</td><td class="r"><b>${rs(s.bal)}</b></td><td class="r"><button class="btn sm p" onclick="paySup(${ix})">Record payment</button></td></tr>`).join('')}</table></div>`;
+  if(cur==='r')h+=`<div class="card"><h3>Regular patients due for refill</h3><table>${customers.filter(c=>c.refill).map(c=>`<tr><td><b>${c.n}</b></td><td>${c.refill.med}</td><td><span class="badge b-warn">Due ${c.refill.due}</span></td><td class="r"><button class="btn sm a" onclick="remind('${c.n}',true)">Send refill reminder</button></td></tr>`).join('')}</table></div>`;
+  return h};
+function remind(n,r){toast((r?'Refill reminder':'Payment reminder')+' sent to '+n+' on WhatsApp')}
+function recv(ix){const c=customers[ix];modal(`<h3>Receive from ${c.n}</h3><p class="muted">Outstanding ${rs(c.bal)}</p><label>Amount (Rs)</label><input id="amt" type="number" value="${c.bal}"><br><br><div class="row"><button class="btn p" onclick="customers[${ix}].bal=Math.max(0,customers[${ix}].bal-(+$('#amt').value||0));closeM();toast('Payment recorded');render()">Save</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+function paySup(ix){const s=suppliers[ix];modal(`<h3>Pay ${s.n}</h3><p class="muted">Outstanding ${rs(s.bal)}</p><label>Amount (Rs)</label><input id="amt" type="number" value="${s.bal}"><br><br><div class="row"><button class="btn p" onclick="suppliers[${ix}].bal=Math.max(0,suppliers[${ix}].bal-(+$('#amt').value||0));closeM();toast('Payment recorded');render()">Save</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+
+// Expenses
+P.exp=()=>{
+  const tot=t=>expenses.filter(e=>t?e.t===t:true).reduce((a,e)=>a+e.a,0);
+  return `<h1>Expenses</h1><div class="sub">October 2026</div>
+  <div class="grid g4"><div class="card kpi"><div class="l">Total this month</div><div class="v">${rs(tot())}</div></div><div class="card kpi"><div class="l">Monthly (fixed)</div><div class="v">${rs(tot('Monthly'))}</div></div><div class="card kpi"><div class="l">Daily</div><div class="v">${rs(tot('Daily'))}</div></div><div class="card kpi"><div class="l">Ad-hoc</div><div class="v">${rs(tot('Ad-hoc'))}</div></div></div><br>
+  <div class="grid g2"><div class="card"><h3>Add expense</h3>
+   <label class="small muted">Type</label><select id="e_t" style="width:100%"><option>Daily</option><option>Monthly</option><option>Ad-hoc</option></select>
+   <label class="small muted">Category</label><input id="e_c" style="width:100%" placeholder="e.g. Generator fuel">
+   <label class="small muted">Amount (Rs)</label><input id="e_a" type="number" style="width:100%"><br><br>
+   <div class="row"><button class="btn p" onclick="addExp()">Save expense</button><button class="btn" onclick="toast('Camera would open to attach receipt photo')">📷 Attach receipt</button></div></div>
+  <div class="card"><h3>Recent</h3><table>${expenses.map(e=>`<tr><td>${e.c}<div class="small muted">${e.d}</div></td><td><span class="badge b-warn">${e.t}</span></td><td class="r">${rs(e.a)}</td></tr>`).join('')}</table></div></div>`};
+function addExp(){const a=+$('#e_a').value,c=$('#e_c').value.trim();if(!a||!c)return toast('Enter category and amount');expenses.unshift({t:$('#e_t').value,c,a,d:'7 Oct'});toast('Expense saved');render()}
+
+// Staff
+P.staff=()=>{
+  const cur=state.tab.s||'p';
+  let h=`<h1>Staff & Payroll</h1><div class="sub">October 2026 · ${staff.length} employees</div>`+tabs('s',[['p','Payroll']].concat(isAdv()?[['a','Attendance']]:[]),'p');
+  const net=s=>s.sal-s.adv+s.bon-(isAdv()?s.leave*Math.round(s.sal/30):0);
+  if(cur==='p')h+=`<div class="card"><table><tr><th>Employee</th><th class="r">Salary</th><th class="r">Advance</th><th class="r">Bonus</th>${isAdv()?'<th class="r">Leave cut</th>':''}<th class="r">Net pay</th><th></th></tr>
+   ${staff.map((s,ix)=>`<tr><td><b>${s.n}</b><div class="small muted">${s.r}</div></td><td class="r">${rs(s.sal)}</td><td class="r">${s.adv?'− '+rs(s.adv):'—'}</td><td class="r">${s.bon?'+ '+rs(s.bon):'—'}</td>${isAdv()?`<td class="r">${s.leave?'− '+rs(s.leave*Math.round(s.sal/30)):'—'}</td>`:''}<td class="r"><b>${rs(net(s))}</b></td><td class="r"><button class="btn sm" onclick="bonus(${ix})">+ Bonus / advance</button> <button class="btn sm p" onclick="slip(${ix})">Payslip</button></td></tr>`).join('')}
+   <tr><td colspan="${isAdv()?5:4}"><b>Total payroll</b></td><td class="r"><b>${rs(staff.reduce((a,s)=>a+net(s),0))}</b></td><td></td></tr></table></div>`;
+  if(cur==='a')h+=`<div class="card"><h3>Today · 7 Oct</h3><table>${staff.map((s,ix)=>`<tr><td><b>${s.n}</b><div class="small muted">${s.r}</div></td><td><span class="badge ${s.pres?'b-ok':'b-bad'}">${s.pres?'Present · in 9:02 am':'Absent'}</span></td><td>${s.leave} leave days this month</td><td class="r"><button class="btn sm" onclick="staff[${ix}].pres=!staff[${ix}].pres;render()">Mark ${s.pres?'absent':'present'}</button></td></tr>`).join('')}</table></div>`;
+  return h};
+function bonus(ix){const s=staff[ix];modal(`<h3>${s.n}</h3><label>Type</label><select id="bt"><option value="bon">Bonus</option><option value="adv">Advance</option></select><label>Amount (Rs)</label><input id="ba" type="number" value="1000"><br><br><div class="row"><button class="btn p" onclick="staff[${ix}][$('#bt').value]+=(+$('#ba').value||0);closeM();toast('Saved');render()">Save</button><button class="btn" onclick="closeM()">Cancel</button></div>`)}
+function slip(ix){const s=staff[ix];const cut=isAdv()?s.leave*Math.round(s.sal/30):0;modal(`<h3>Payslip · October 2026</h3><p><b>${s.n}</b> · ${s.r}</p><table><tr><td>Basic salary</td><td class="r">${rs(s.sal)}</td></tr><tr><td>Bonus</td><td class="r">+ ${rs(s.bon)}</td></tr><tr><td>Advance recovered</td><td class="r">− ${rs(s.adv)}</td></tr>${cut?`<tr><td>Leave deduction</td><td class="r">− ${rs(cut)}</td></tr>`:''}<tr><td><b>Net pay</b></td><td class="r"><b>${rs(s.sal+s.bon-s.adv-cut)}</b></td></tr></table><br><div class="row"><button class="btn p" onclick="closeM();toast('Payslip sent on WhatsApp')">Send on WhatsApp</button><button class="btn" onclick="closeM()">Close</button></div>`)}
+
+// Reports
+const MON={Sep:{sales:2540000,cogs:2057400,exp:112300,sal:165000},Aug:{sales:2390000,cogs:1926300,exp:104000,sal:160000}};
+const gross=m=>m.sales-m.cogs, net=m=>gross(m)-m.exp-m.sal;
+const dl=(c,p,goodUp=true)=>{const d=(c-p)/Math.abs(p)*100,up=d>=0,good=up===goodUp;return `<span class="small" style="color:var(--${good?'ok':'bad'});white-space:nowrap">${up?'▲':'▼'} ${Math.abs(d).toFixed(1)}%</span>`};
+function bars(vals,labels,h,hi){const mx=Math.max(...vals);return `<div class="bars" style="height:${h||130}px">${vals.map((v,i)=>`<div title="${labels[i]}: ${v}"><i style="height:${Math.max(4,v/mx*((h||130)-26))}px;${i===hi?'background:var(--adv)':''}"></i>${labels[i]}</div>`).join('')}</div>`}
+function hbars(rows,fmt,color){const mx=Math.max(...rows.map(r=>r[1]));return rows.map(r=>`<div class="hb"><span class="lbl">${r[0]}</span><span class="tr"><i style="width:${r[1]/mx*100}%;${color?'background:'+color:''}"></i></span><b class="small" style="min-width:70px;text-align:right">${fmt?fmt(r[1]):rs(r[1])}</b></div>`).join('')}
+const stockVal=i=>Math.round(i.stock/i.per*i.price*.8);
+function expRisk(){return items.filter(i=>i.stock>0&&expDays(i.exp)<=90).map(i=>({i,d:expDays(i.exp),v:stockVal(i)})).sort((a,b)=>a.d-b.d)}
+const REPS=[
+ {id:'pl',t:'Profit & Loss',d:'Where every rupee went, compared with last month',i:'💹'},
+ {id:'sales',t:'Sales trend',d:'Daily sales, best days, how customers pay',i:'📈'},
+ {id:'best',t:'Best sellers & margins',d:'What really earns money, and what only looks busy',i:'🏆'},
+ {id:'expiry',t:'Expiry risk',d:'Money about to expire, and what to do about it',i:'⏳'},
+ {id:'khata',t:'Khata ageing',d:'Who owes you, and for how long',i:'📒'},
+ {id:'cost',t:'Expense breakdown',d:'Where your running costs go',i:'💸'},
+ {id:'hours',t:'Busy hours',d:'When customers come, so you can plan staff and stock',i:'🕒',adv:1,pts:['Heat map of sales by day and hour','Know exactly when to add or reduce staff']},
+ {id:'reorder',t:'Smart reorder',d:'What will run out soon and how much to buy',i:'🛒',adv:1,pts:['Based on your real selling speed','One-click purchase list per supplier']},
+ {id:'dead',t:'Dead stock',d:'Cash stuck in medicines that do not sell',i:'🧊',adv:1,pts:['See how much money is sleeping on your shelves','Suggested action for each item']},
+ {id:'staff',t:'Staff performance',d:'Sales, discounts and voided bills by person',i:'🧑‍💼',adv:1,pts:['Who sells most, who gives most discounts','Flags unusual voids and discounts']},
+ {id:'branch',t:'Branch scorecard',d:'Compare your branches side by side',i:'🏬',adv:1,pts:['Sales, margin, expiry loss, staff cost per branch','Spot the weak branch in 10 seconds']}
+];
+const R={};
+R.pl=()=>{const s=MON.Sep,a=MON.Aug,row=(l,x,y,b,good)=>`<tr><td>${b?'<b>'+l+'</b>':l}</td><td class="r">${b?'<b>'+rs(x)+'</b>':rs(x)}</td><td class="r muted">${rs(y)}</td><td class="r">${dl(x,y,good!==false)}</td></tr>`;
+  return `<div class="grid g2"><div class="card"><h3>September 2026 vs August</h3><table><tr><th></th><th class="r">Sept</th><th class="r">Aug</th><th class="r">Change</th></tr>
+   ${row('Sales',s.sales,a.sales)}${row('Cost of medicines',s.cogs,a.cogs,0,false)}${row('Gross profit',gross(s),gross(a),1)}${row('Running expenses',s.exp,a.exp,0,false)}${row('Salaries & bonuses',s.sal,a.sal,0,false)}${row('Net profit',net(s),net(a),1)}</table></div>
+   <div class="card"><h3>Net profit, last 5 months (Rs thousand)</h3>${bars([171,184,192,199.7,205.3],['May','Jun','Jul','Aug','Sep'],150,4)}
+   <p style="margin:10px 0 0"><b>Rs ${(net(s)/s.sales*100).toFixed(1)}</b> kept from every Rs 100 sold · gross margin ${(gross(s)/s.sales*100).toFixed(1)}% <span class="muted small">(Aug ${(gross(a)/a.sales*100).toFixed(1)}%)</span></p></div></div>
+   <div class="card" style="margin-top:14px"><h3>What changed</h3><ul style="margin:0;padding-left:18px"><li>Sales grew <b>6.3%</b>, but medicine margin slipped 0.4 points, so extra sales made less extra profit.</li><li>Running expenses rose <b>8%</b>, mostly electricity and an AC repair.</li><li>Salaries are <b>${(s.sal/s.sales*100).toFixed(1)}%</b> of sales. Typical stores aim for under 8%.</li></ul></div>`};
+const DAYS=[78,84,91,70,88,95,102,81,76,89,93,99,104,84.5],DL=['24','25','26','27','28','29','30','1','2','3','4','5','6','7'];
+R.sales=()=>{const mx=Math.max(...DAYS),av=DAYS.reduce((a,b)=>a+b)/DAYS.length;
+  return `<div class="grid g4"><div class="card kpi"><div class="l">Average per day</div><div class="v">${rs(av*1000)}</div></div><div class="card kpi"><div class="l">Best day</div><div class="v">${rs(mx*1000)}</div><div class="l">Tue 6 Oct</div></div><div class="card kpi"><div class="l">Bills per day</div><div class="v">112</div><div class="l">avg bill Rs 790</div></div><div class="card kpi"><div class="l">Last 14 days</div><div class="v">${rs(DAYS.reduce((a,b)=>a+b)*1000)}</div></div></div><br>
+  <div class="grid g2"><div class="card"><h3>Daily sales (Rs thousand)</h3>${bars(DAYS,DL,150,DAYS.indexOf(mx))}</div>
+  <div class="card"><h3>How customers pay</h3>${hbars([['Cash',61],['Easypaisa / JazzCash',17],['Card',14],['Khata (credit)',8]],v=>v+'%')}<p class="small muted">Khata share is 8% of sales: keep it under 10% to protect cash flow.</p></div></div>`};
+R.best=()=>`<div class="grid g2"><div class="card"><h3>Top 6 by profit, September</h3><table><tr><th>Medicine</th><th class="r">Sold</th><th class="r">Profit</th><th class="r">Margin</th></tr>
+   ${[['Risek 20mg','410 packs',48200,'22%'],['Panadol 500mg','1,150 packs',41800,'25%'],['Glucophage 500mg','260 packs',37600,'21%'],['Brufen 400mg','520 packs',29100,'6%'],['Concor 5mg','120 packs',24700,'19%'],['Ventolin Inhaler','48 pcs',9300,'18%']].map(r=>`<tr><td>${r[0]}</td><td class="r muted">${r[1]}</td><td class="r">${rs(r[2])}</td><td class="r">${r[3]}</td></tr>`).join('')}</table></div>
+  <div class="card"><h3>⚠ Busy but barely earning</h3><p class="small muted">High sales, margin under 8%. Check purchase price or discounts.</p><table>${[['Brufen 400mg','6%','Rs 29,100'],['Calpol 120mg/5ml','7%','Rs 6,800'],['Flagyl 400mg','7%','Rs 4,200']].map(r=>`<tr><td>${r[0]}</td><td><span class="badge b-warn">${r[1]}</span></td><td class="r">${r[2]}</td></tr>`).join('')}</table>
+  <h3 style="margin-top:14px">Sold below cost</h3><p class="small" style="margin:0"><span class="badge b-bad">2 bills</span> Discounts took Calpol and Panadol Extra below purchase price. <a class="muted">View bills</a></p></div></div>`;
+R.expiry=()=>{const r=expRisk(),tot=r.reduce((a,x)=>a+x.v,0),b=(lo,hi)=>r.filter(x=>x.d>=lo&&x.d<=hi).reduce((a,x)=>a+x.v,0);
+  return `<div class="grid g4"><div class="card kpi"><div class="l">Within 30 days</div><div class="v" style="color:var(--bad)">${rs(b(0,30))}</div></div><div class="card kpi"><div class="l">31 – 60 days</div><div class="v" style="color:var(--warn)">${rs(b(31,60))}</div></div><div class="card kpi"><div class="l">61 – 90 days</div><div class="v">${rs(b(61,90))}</div></div><div class="card kpi"><div class="l">Total at risk (at cost)</div><div class="v">${rs(tot)}</div></div></div><br>
+  <div class="card"><table><tr><th>Medicine</th><th>Batch</th><th>Stock</th><th>Expires in</th><th class="r">Value at cost</th><th>Suggested action</th></tr>
+  ${r.map(x=>`<tr><td><b>${x.i.name}</b></td><td>${x.i.batch}</td><td>${stockTxt(x.i)}</td><td><span class="badge ${x.d<=30?'b-bad':'b-warn'}">${x.d} days</span></td><td class="r">${rs(x.v)}</td><td>${x.d<=30?'Return to supplier now':x.d<=60?'Sell first / small discount':'Sell first (FEFO)'}</td></tr>`).join('')}</table></div>
+  <p class="small muted">Last 6 months: expiry losses Rs 6,400 this month · Rs 9,100 · Rs 4,800 · Rs 12,300 · Rs 7,700.</p>`};
+R.khata=()=>{const bk=[['0 – 15 days',0,15],['16 – 30 days',16,30],['31 – 60 days',31,60],['Over 60',61,999]].map(b=>[b[0],customers.filter(c=>c.days>=b[1]&&c.days<=b[2]).reduce((a,c)=>a+c.bal,0)]),tot=customers.reduce((a,c)=>a+c.bal,0),old=customers.filter(c=>c.days>30).reduce((a,c)=>a+c.bal,0);
+  return `<div class="grid g2"><div class="card"><h3>Total outstanding: ${rs(tot)}</h3>${hbars(bk,null,'var(--warn)')}<p class="small"><b>${Math.round(old/tot*100)}%</b> of khata is older than 30 days. The longer it waits, the less likely it is to come back.</p></div>
+  <div class="card"><h3>Customers</h3><table>${customers.slice().sort((a,b)=>b.days-a.days).map(c=>`<tr><td><b>${c.n}</b><div class="small muted">${c.days} days since last bill</div></td><td class="r">${rs(c.bal)}</td><td class="r"><button class="btn sm" onclick="remind('${c.n}')">Remind</button></td></tr>`).join('')}</table></div></div>`};
+R.cost=()=>{const t=ty=>expenses.filter(e=>e.t===ty).reduce((a,e)=>a+e.a,0),tot=expenses.reduce((a,e)=>a+e.a,0);
+  return `<div class="grid g2"><div class="card"><h3>By category, this month · ${rs(tot)}</h3>${hbars(expenses.slice().sort((a,b)=>b.a-a.a).map(e=>[e.c,e.a]))}</div>
+  <div class="card"><h3>By type</h3>${hbars([['Fixed monthly',t('Monthly')],['Ad-hoc',t('Ad-hoc')],['Daily small spends',t('Daily')]])}<p class="small muted">Running expenses are ${(tot/MON.Sep.sales*100).toFixed(1)}% of sales. Add salaries and it is ${((tot+MON.Sep.sal)/MON.Sep.sales*100).toFixed(1)}%.</p></div></div>`};
+const HM=[[2,4,5,5,7,9,6],[3,5,5,4,7,10,7],[3,5,4,4,6,9,6],[3,5,5,5,7,10,7],[2,4,4,4,6,8,5],[3,6,6,6,8,10,8],[2,4,5,5,6,7,4]],HD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],HH=['9–11am','11–1','1–3','3–5','5–7','7–9','9–11pm'];
+R.hours=()=>{const tot=HM.flat().reduce((a,b)=>a+b),eve=HM.flat().filter((v,i)=>i%7>=4).reduce((a,b)=>a+b);
+  return `<div class="card"><h3>Sales by day and hour (darker = busier)</h3><table style="text-align:center"><tr><th></th>${HH.map(h=>`<th style="text-align:center">${h}</th>`).join('')}</tr>${HM.map((r,i)=>`<tr><td class="small muted">${HD[i]}</td>${r.map(v=>`<td style="background:rgba(15,123,108,${v/11});color:${v>6?'#fff':'inherit'};border-radius:6px">${v*8}</td>`).join('')}</tr>`).join('')}</table>
+  <p class="small muted">Numbers are bills per slot (average).</p></div><div class="card" style="margin-top:14px"><h3>What this tells you</h3><ul style="margin:0;padding-left:18px"><li><b>${Math.round(eve/tot*100)}%</b> of your bills happen between 5 pm and 11 pm. Make sure both counters are staffed then.</li><li>Saturday 7–9 pm is the busiest slot of the week.</li><li>Sunday evenings are quiet: a good time for stock-taking.</li></ul></div>`};
+R.reorder=()=>{const rows=[['Panadol 500mg','Alpha Distributors',32,4.2,7,60,2880],['Calpol 120mg/5ml','Alpha Distributors',4,2.0,2,20,2960],['Risek 20mg','Medi Link Traders',20,1.5,13,15,3120],['Augmentin 625mg','City Pharma Wholesale',0,1.8,0,12,5000],['Ventolin Inhaler','Medi Link Traders',9,0.4,22,6,3120]],tot=rows.reduce((a,r)=>a+r[6],0);
+  return `<div class="card"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 style="margin:0">Suggested purchases</h3><button class="btn a" onclick="toast('3 purchase lists created, one per supplier')">Create purchase lists</button></div><table><tr><th>Medicine</th><th>Supplier</th><th class="r">In stock (packs)</th><th class="r">Sells / day</th><th>Runs out</th><th class="r">Buy</th><th class="r">Est. cost</th></tr>
+  ${rows.map(r=>`<tr><td><b>${r[0]}</b></td><td class="muted">${r[1]}</td><td class="r">${r[2]}</td><td class="r">${r[3]}</td><td><span class="badge ${r[4]<=3?'b-bad':r[4]<=10?'b-warn':'b-ok'}">${r[4]===0?'Out now':r[4]+' days'}</span></td><td class="r"><b>${r[5]}</b></td><td class="r">${rs(r[6])}</td></tr>`).join('')}<tr><td colspan="6"><b>Total</b></td><td class="r"><b>${rs(tot)}</b></td></tr></table></div><p class="small muted">Quantities are based on the last 60 days of your own sales plus a 14-day safety stock.</p>`};
+R.dead=()=>{const rows=[['Surbex Z',8,7800,'No sale in 120 days','Discount 20% / bundle'],['Arinac Forte',10,5400,'No sale in 98 days','Return to supplier'],['Betnovate-N cream',14,9100,'No sale in 150 days','Return to supplier'],['Neurobion forte',6,6700,'No sale in 105 days','Discount 15%'],['Voltral gel',12,12300,'No sale in 130 days','Bundle with pain tablets']],tot=rows.reduce((a,r)=>a+r[2],0);
+  return `<div class="grid g4"><div class="card kpi"><div class="l">Cash stuck in dead stock</div><div class="v" style="color:var(--bad)">${rs(tot)}</div></div><div class="card kpi"><div class="l">Items with no sale in 90+ days</div><div class="v">${rows.length}</div></div></div><br><div class="card"><table><tr><th>Medicine</th><th class="r">Packs</th><th class="r">Value at cost</th><th>Status</th><th>Suggested action</th></tr>${rows.map(r=>`<tr><td><b>${r[0]}</b></td><td class="r">${r[1]}</td><td class="r">${rs(r[2])}</td><td class="muted">${r[3]}</td><td>${r[4]}</td></tr>`).join('')}</table></div>`};
+R.staff=()=>`<div class="card"><table><tr><th>Employee</th><th class="r">Bills</th><th class="r">Sales</th><th class="r">Avg bill</th><th class="r">Discount given</th><th class="r">Voids</th><th>Status</th></tr>
+  ${[['Usman Ali','Pharmacist',612,498000,'814','1.1%',1,'b-ok','Normal'],['Saad Mehmood','Cashier',905,611000,'675','3.4%',7,'b-bad','Review voids'],['Imran Shah','Sales Assistant',488,372000,'762','1.9%',2,'b-ok','Normal'],['Waqas','Delivery / Helper',90,61000,'678','0.8%',0,'b-ok','Normal']].map(r=>`<tr><td><b>${r[0]}</b><div class="small muted">${r[1]}</div></td><td class="r">${r[2]}</td><td class="r">${rs(r[3])}</td><td class="r">${rs(+r[4])}</td><td class="r">${r[5]}</td><td class="r">${r[6]}</td><td><span class="badge ${r[7]}">${r[8]}</span></td></tr>`).join('')}</table></div>
+  <p class="small muted">Saad voided 7 bills this month, well above the shop average of 2.5. Worth a quiet look at the audit log.</p>`;
+R.branch=()=>{const B=[['Gulberg (Main)',1270000,'+7.1%','19.4%',2.1,'7.4%','b-ok','#1'],['Johar Town',762000,'+4.0%','18.1%',3.4,'8.9%','b-warn','#2'],['Model Town',508000,'−1.5%','16.8%',5.8,'11.6%','b-bad','#3']];
+  return `<div class="card"><table><tr><th>Branch</th><th class="r">Sales (Sept)</th><th class="r">Growth</th><th class="r">Margin</th><th class="r">Expiry loss</th><th class="r">Staff cost</th><th>Rank</th></tr>${B.map(b=>`<tr><td><b>${b[0]}</b></td><td class="r">${rs(b[1])}</td><td class="r">${b[2]}</td><td class="r">${b[3]}</td><td class="r">${b[4]}% of stock</td><td class="r">${b[5]}</td><td><span class="badge ${b[6]}">${b[7]}</span></td></tr>`).join('')}</table></div>
+  <p class="small muted">Model Town is shrinking while paying the highest staff cost per rupee sold and losing the most stock to expiry.</p>`};
+function highlights(){const r=expRisk(),rv=r.reduce((a,x)=>a+x.v,0),old=customers.filter(c=>c.days>30).reduce((a,c)=>a+c.bal,0);
+  const H=[['💹','Profit up 2.8%','Sep net profit '+rs(net(MON.Sep))+', but margin slipped 0.4 pts.','pl'],['⏳',rs(rv)+' about to expire','Within 90 days, at cost. Act on '+r.length+' items.','expiry'],['📒',rs(old)+' of khata is 30+ days old','Haji Rafiq owes Rs 9,600 for 45 days.','khata'],['🛒','Panadol runs out in ~7 days','Plus 3 more items running low.','reorder']];
+  return `<div class="grid g4" style="margin-bottom:18px">${H.map(h=>`<div class="card tile" onclick="state.rep='${h[3]}';render()"><div style="font-size:22px">${h[0]}</div><b>${h[1]}</b><div class="small muted">${h[2]}</div></div>`).join('')}</div>`}
+P.rep=()=>{
+  if(!state.rep)return `<div class="row" style="justify-content:space-between"><div><h1>Reports</h1><div class="sub">Plain answers to “how is my business doing?”</div></div>
+   <div class="row"><button class="btn" onclick="toast('Daily summary will arrive on WhatsApp at 9 pm')">📲 Daily summary on WhatsApp</button><button class="btn" onclick="toast('All reports exported to PDF')">⬇ Export all</button></div></div>${highlights()}
+   <div class="grid g4">${REPS.map(r=>{const lock=r.adv&&!isAdv();return `<div class="card tile" onclick="state.rep='${r.id}';render()"><div style="font-size:22px">${r.i}</div><b>${r.t}</b> ${r.adv?`<span class="badge b-adv">${lock?'🔒 ':''}Advanced I</span>`:''}<div class="small muted">${r.d}</div></div>`}).join('')}</div>`;
+  const rp=REPS.find(r=>r.id===state.rep),lock=rp.adv&&!isAdv();
+  return `<a class="small" style="cursor:pointer;color:var(--brand)" onclick="state.rep=null;render()">← All reports</a><div class="row" style="justify-content:space-between;margin:6px 0 14px"><div><h1>${rp.i} ${rp.t}</h1><div class="sub" style="margin:0">${rp.d}</div></div>
+   ${lock?'':`<div class="row"><select><option>This month</option><option>Last month</option><option>Last 3 months</option></select><button class="btn" onclick="toast('Exported to Excel')">⬇ Excel</button><button class="btn" onclick="toast('Exported to PDF')">⬇ PDF</button><button class="btn" onclick="toast('Report will be sent every Monday on WhatsApp')">📲 Schedule</button></div>`}</div>
+   ${lock?upsell(rp.t,rp.pts):R[rp.id]()}`};
+
+// Advanced pages
+P.ctrl=()=>{
+  if(!isAdv())return upsell('Controlled Drugs Register',['Digital register for scheduled / controlled medicines','Patient, doctor and prescription recorded on each sale','Inspection-ready report in one click']);
+  const rows=[['07 Oct','Alprazolam 0.5mg','Dr. S. Qureshi','Mr. Khalid M.',10,'Usman Ali'],['06 Oct','Tramadol 50mg','Dr. N. Fatima','Mrs. Rubina',6,'Usman Ali'],['04 Oct','Diazepam 5mg','Dr. S. Qureshi','Mr. Adeel',10,'Saad Mehmood']];
+  return `<h1>Controlled Drugs Register</h1><div class="sub">Every sale of a scheduled drug is logged with prescription details</div><div class="card"><div class="row" style="margin-bottom:10px"><button class="btn a" onclick="toast('Entry form would open')">+ New entry</button><button class="btn" onclick="toast('Inspection report exported')">Export inspection report</button></div><table><tr><th>Date</th><th>Drug</th><th>Doctor</th><th>Patient</th><th class="r">Qty</th><th>Sold by</th></tr>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i===4?'r':''}">${c}</td>`).join('')}</tr>`).join('')}</table></div>`};
+let perms=[['Give discount above 10%',[1,0,0]],['Edit selling price',[1,0,0]],['Delete / void a bill',[1,0,0]],['See profit & cost price',[1,0,0]],['Add expenses',[1,1,0]],['Receive stock',[1,1,1]]];
+P.audit=()=>{
+  if(!isAdv())return upsell('Permissions & Audit Log',['Decide who can discount, void bills or see profit','Every change recorded with who and when','Alerts on suspicious activity']);
+  const log=[['10:42','Saad Mehmood','Discount 15% on bill #2231','Needs approval','b-warn'],['10:15','Usman Ali','Price edited: Brufen 400mg 135 → 140','Allowed','b-ok'],['09:50','Saad Mehmood','Bill #2219 voided','Flagged','b-bad'],['09:02','Imran Shah','Checked in','Allowed','b-ok']];
+  return `<h1>Permissions & Audit</h1><div class="sub">Control what staff can do, see what happened</div><div class="grid g2">
+  <div class="card"><h3>Who can do what</h3><table><tr><th></th><th>Owner</th><th>Pharmacist</th><th>Cashier</th></tr>${perms.map((p,ix)=>`<tr><td>${p[0]}</td>${p[1].map((v,j)=>`<td><span class="tog ${v?'on':''}" onclick="perms[${ix}][1][${j}]^=1;render()"></span></td>`).join('')}</tr>`).join('')}</table></div>
+  <div class="card"><h3>Today's activity</h3>${log.map(l=>`<div class="alert"><span><b>${l[0]}</b> ${l[1]}<div class="small muted">${l[2]}</div></span><span class="badge ${l[4]}">${l[3]}</span></div>`).join('')}</div></div>`};
+
+function render(){renderNav();$('#main').innerHTML=P[state.page]();
+  if(state.page==='pos'&&!$('#layer .modal')){const f=state.fq;state.fq=null;const el=f!=null?$('#qty'+f):$('#q');if(el){el.focus();if(f!=null)el.select()}}}
+render();
+</script>
+</body>
+</html>

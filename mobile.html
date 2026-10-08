@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>PharmaFlow Owner App Demo</title>
+<style>
+:root{--bg:#eef3f2;--card:#fff;--ink:#17302b;--mute:#6b7f7a;--line:#e1e9e6;--brand:#0f7b6c;--brand2:#e6f4f1;--warn:#c77700;--warn2:#fff3dc;--bad:#c0392b;--bad2:#fdeaea;--ok:#1e8a4c;--ok2:#e5f6ec;--adv:#6a4fc4;--adv2:#efeafb}
+@media (prefers-color-scheme:dark){:root{--bg:#0c1415;--card:#172324;--ink:#e6f0ee;--mute:#8fa5a0;--line:#26393a;--brand:#35b3a1;--brand2:#12312e;--warn:#f0a63a;--warn2:#33291a;--bad:#ef6f61;--bad2:#3a1d1a;--ok:#4fc283;--ok2:#14301f;--adv:#a590f0;--adv2:#262040}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;align-items:center;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+.demo{padding:12px;display:flex;gap:10px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:transparent;padding:6px 12px;cursor:pointer}
+.seg button.on{background:var(--brand);color:#fff}.seg.adv button.on{background:var(--adv)}
+.phone{width:390px;height:790px;background:var(--bg);border:10px solid #1b2a28;border-radius:38px;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 14px 40px rgba(0,0,0,.25)}
+@media(max-width:480px){.phone{width:100%;height:calc(100vh - 56px);border:0;border-radius:0;box-shadow:none}}
+.top{background:var(--brand);color:#fff;padding:14px 16px 12px}
+.top.adv{background:var(--adv)}
+.top .s{font-size:12px;opacity:.85}
+.top .t{font-size:18px;font-weight:700}
+.top .r{display:flex;justify-content:space-between;align-items:center}
+.top select{background:rgba(255,255,255,.18);border:0;color:#fff;border-radius:8px;padding:4px 8px}
+.top select option{color:#000}
+.body{flex:1;overflow:auto;padding:12px}
+nav{display:flex;border-top:1px solid var(--line);background:var(--card)}
+nav button{flex:1;border:0;background:none;padding:8px 0 10px;color:var(--mute);font-size:11px;cursor:pointer;position:relative}
+nav button .i{display:block;font-size:20px}
+nav button.on{color:var(--brand);font-weight:600}
+nav .dot{position:absolute;top:4px;left:56%;background:var(--bad);color:#fff;border-radius:99px;font-size:10px;padding:0 5px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.card h3{margin:0 0 8px;font-size:12px;color:var(--mute);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.hero .big{font-size:32px;font-weight:800;letter-spacing:-.5px}
+.kp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.kp .card{margin:0}
+.kp .v{font-size:19px;font-weight:700}.kp .l{font-size:11px;color:var(--mute)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.small{font-size:12px}.muted{color:var(--mute)}.up{color:var(--ok)}.dn{color:var(--bad)}
+.badge{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;font-weight:600}
+.b-ok{background:var(--ok2);color:var(--ok)}.b-warn{background:var(--warn2);color:var(--warn)}.b-bad{background:var(--bad2);color:var(--bad)}.b-adv{background:var(--adv2);color:var(--adv)}
+.btn{border:1px solid var(--line);background:var(--card);padding:6px 12px;border-radius:10px;cursor:pointer}
+.btn.p{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.a{background:var(--adv);color:#fff;border-color:var(--adv)}
+.btn.sm{padding:3px 10px;font-size:12px}
+.btn.w{width:100%;padding:11px;font-weight:600}
+.chips{display:flex;gap:6px;margin:0 0 10px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);padding:4px 12px;border-radius:99px;font-size:12px;cursor:pointer}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.adv .chip.on,.advmode .chip.on{background:var(--adv);border-color:var(--adv)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:84px}
+.bars div{flex:1;text-align:center;font-size:10px;color:var(--mute)}
+.bars i{display:block;background:var(--brand);border-radius:4px 4px 0 0;margin-bottom:3px;opacity:.85}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--brand)}
+.stack{display:flex;height:12px;border-radius:99px;overflow:hidden;gap:2px}.stack i{display:block}
+.sheet{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;z-index:5}
+.sheet .box{background:var(--card);width:100%;border-radius:20px 20px 0 0;padding:18px;max-height:85%;overflow:auto}
+.toast{position:absolute;bottom:76px;left:16px;right:16px;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:12px;text-align:center;z-index:9}
+.appr{background:var(--adv2);border-color:transparent}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:5px;animation:p 1.4s infinite}
+@keyframes p{50%{opacity:.25}}
+.alert{border-left:4px solid var(--warn);padding-left:10px}.alert.bad{border-color:var(--bad)}.alert.ok{border-color:var(--ok)}
+.tog{display:inline-block;width:36px;height:21px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;flex:none}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#fff;transition:.15s}
+.tog.on{background:var(--ok)}.tog.on::after{left:17px}
+.wa{background:#dcf8c6;color:#17302b;border-radius:12px;padding:10px 12px;font-size:13px;white-space:pre-line;border:0}
+@media (prefers-color-scheme:dark){.wa{background:#1f3b2a;color:#e6f0ee}}
+.lockc{opacity:.8;text-align:center;padding:14px}
+</style>
+</head>
+<body>
+<div class="demo"><span class="small muted">Demo plan:</span><div class="seg" id="seg"><button data-t="basic" class="on">Basic</button><button data-t="adv">Advanced I</button></div></div>
+<div class="phone" id="phone">
+  <div class="top" id="top"></div>
+  <div class="body" id="body"></div>
+  <nav id="nav"></nav>
+</div>
+<script>
+const rs=n=>'Rs '+Math.round(n).toLocaleString('en-PK');
+const k=n=>n>=100000?(n/100000).toFixed(n>=1000000?1:2).replace(/\.?0+$/,'')+' lac':rs(n);
+const $=s=>document.querySelector(s);
+let S={tier:'basic',tab:'home',branch:'all',per:'today',af:'all',sheet:null,pend:2,tg:{daily:1,low:1,exp:1,disc:1,void:1,cash:0}};
+const adv=()=>S.tier==='adv';
+const BR={all:{n:'All branches',m:1},g:{n:'Gulberg (Main)',m:.5},j:{n:'Johar Town',m:.3},m:{n:'Model Town',m:.2}};
+const M=()=>adv()?BR[S.branch].m:1;
+let sales=[{no:2231,t:'10:42',a:3450,by:'Saad'},{no:2230,t:'10:31',a:1850,by:'Usman'},{no:2229,t:'10:20',a:720,by:'Saad'},{no:2228,t:'10:08',a:1290,by:'Imran'}];
+let tickNo=2232;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;$('#phone').appendChild(t);setTimeout(()=>t.remove(),2200)}
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{S.tier=b.dataset.t;S.sheet=null;if(!adv()&&S.tab==='br')S.tab='home';render()});
+
+// ---------- data ----------
+const PER={today:{l:'Today',sales:84500,prev:78300,bills:112,pl:'vs yesterday'},week:{l:'This week',sales:592000,prev:561000,bills:790,pl:'vs last week'},month:{l:'This month',sales:2540000,prev:2390000,bills:3320,pl:'vs last month (Aug)'}};
+const alerts=[
+ {g:'stock',lv:'bad',t:'Augmentin 625mg is out of stock',s:'Sold 1.8 packs/day. Substitute (Clavam) available.',act:['Tell manager','toast:Manager notified']},
+ {g:'stock',lv:'warn',t:'Panadol 500mg runs out in ~7 days',s:'32 packs left. Suggested order: 60 packs.',act:['Reorder list','toast:Added to purchase list']},
+ {g:'stock',lv:'warn',t:'Rs 4,100 of stock expires in 90 days',s:'5 medicines. 1 within 30 days (Flagyl, Oct).',act:['See items','sheet:exp']},
+ {g:'money',lv:'bad',t:'Haji Rafiq owes Rs 9,600',s:'45 days since last payment.',act:['WhatsApp reminder','toast:Reminder sent to Haji Rafiq']},
+ {g:'money',lv:'warn',t:'Alpha Distributors due 12 Oct',s:'Rs 86,000 · 5 days left.',act:['Remind me','toast:I will remind you on 11 Oct']},
+ {g:'money',lv:'ok',t:'Rent due 1 Nov',s:'Rs 65,000. Cash on hand is enough.',act:null},
+ {g:'team',lv:'bad',a:1,t:'Bill #2219 voided by Saad',s:'09:50 · Rs 2,100. 7th void this month (avg 2.5).',act:['Review','sheet:void']},
+ {g:'team',lv:'warn',a:1,t:'15% discount requested',s:'Saad Mehmood · Bill #2231 · Rs 3,450',act:'appr1'},
+ {g:'team',lv:'warn',a:1,t:'Expense approval: generator fuel',s:'Waqas · Rs 4,000',act:'appr2'},
+ {g:'team',lv:'warn',a:1,t:'Cash short Rs 450 at yesterday\'s close',s:'Counter 1 · Saad Mehmood',act:['Review','toast:Opening cash report']}
+];
+const staff=[{n:'Usman Ali',r:'Pharmacist',s:41200,b:46,in:'8:55',pres:1,sal:65000},{n:'Saad Mehmood',r:'Cashier',s:28900,b:41,in:'9:02',pres:1,sal:38000},{n:'Imran Shah',r:'Sales Assistant',s:14400,b:25,in:null,pres:0,sal:34000},{n:'Waqas',r:'Helper',s:0,b:0,in:'9:10',pres:1,sal:28000}];
+
+// ---------- layout ----------
+const TABS=()=>[['home','🏠','Overview'],['alerts','🔔','Alerts'],['money','💰','Money'],['team','👥','Team']].concat(adv()?[['br','🏬','Branches']]:[]);
+const TT={home:'Overview',alerts:'Alerts',money:'Money',team:'Team',br:'Branches'};
+function head(){$('#top').className='top'+(adv()?' adv':'');
+  $('#top').innerHTML=`<div class="r"><div><div class="s">Al-Shifa Medical Store · Owner</div><div class="t">${TT[S.tab]}</div></div>${adv()&&S.tab!=='br'?`<select onchange="S.branch=this.value;render()">${Object.entries(BR).map(([x,v])=>`<option value="${x}" ${S.branch===x?'selected':''}>${v.n}</option>`).join('')}</select>`:''}</div>`}
+function nav(){const badge=openAlerts();
+  $('#nav').innerHTML=TABS().map(t=>`<button class="${S.tab===t[0]?'on':''}" onclick="S.tab='${t[0]}';render()"><span class="i">${t[1]}</span>${t[2]}${t[0]==='alerts'?`<span class="dot">${badge}</span>`:''}</button>`).join('')}
+
+const openAlerts=()=>alerts.filter(a=>(adv()||!a.a)&&a.lv!=='ok'&&!(a.act==='appr1'&&S.a1)&&!(a.act==='appr2'&&S.a2)).length;
+const V={};
+V.home=()=>{
+  const p=PER[S.per],m=M(),sales=p.sales*m,prev=p.prev*m,g=(sales/prev-1)*100,d=['Th','Fr','Sa','Su','Mo','Tu','We'],vals=[.8,1,.9,.7,1.1,.95,1];
+  const alertN=openAlerts();
+  let h=`<div class="chips ${adv()?'advmode':''}">${Object.entries(PER).map(([x,v])=>`<span class="chip ${S.per===x?'on':''}" onclick="S.per='${x}';render()">${v.l}</span>`).join('')}</div>
+  <div class="card hero"><div class="small muted">Sales · ${p.l}</div><div class="big">${rs(sales)}</div><div class="small"><span class="${g>=0?'up':'dn'}">${g>=0?'▲':'▼'} ${Math.abs(g).toFixed(1)}%</span> <span class="muted">${p.pl}</span></div>
+   <div class="bars" style="margin-top:10px">${vals.map((v,i)=>`<div><i style="height:${v*58}px;${i===6?'background:var(--adv)':''}"></i>${d[i]}</div>`).join('')}</div></div>
+  <div class="kp"><div class="card"><div class="l">Profit</div><div class="v">${rs(sales*.19)}</div><div class="small muted">19.0% margin</div></div>
+   <div class="card"><div class="l">Bills</div><div class="v">${Math.round(p.bills*m)}</div><div class="small muted">avg ${rs(sales/(p.bills*m))}</div></div>
+   <div class="card"><div class="l">Cash in drawer</div><div class="v">${rs(46475*m)}</div><div class="small muted">+ Rs ${Math.round(31200*m).toLocaleString()} in wallet/bank</div></div>
+   <div class="card"><div class="l">Customers owe</div><div class="v">${rs(15650*m)}</div><div class="small dn">${rs(9600*m)} over 30 days</div></div></div>
+  <div class="card"><h3>October profit target</h3><div class="row" style="border:0;padding:0 0 6px"><b>${rs(62400*m)}</b><span class="muted small">of ${rs(215000*m)} · day 7 of 31</span></div><div class="bar"><i style="width:29%"></i></div><div class="small muted" style="margin-top:6px">On track: last month you were at 28% on day 7.</div></div>
+  <div class="card ${alertN?'':''}" onclick="S.tab='alerts';render()"><h3>Needs your attention</h3><div class="row" style="border:0;padding:0"><span><b>${alertN} things</b> <span class="muted small">need a look</span></span><span class="muted">›</span></div></div>
+  <div class="card"><h3><span class="live"></span>Live sales</h3><div id="tick">${tickHtml()}</div></div>`;
+  if(adv()&&S.branch==='all')h+=`<div class="card"><h3>Branches today</h3>${['g','j','m'].map(x=>`<div class="row"><span>${BR[x].n}</span><b>${rs(84500*BR[x].m)}</b></div>`).join('')}</div>`;
+  h+=`<div class="card"><h3>Your daily summary (WhatsApp, 9 pm)</h3><div class="wa">📊 Al-Shifa · 7 Oct
+Sales: ${rs(84500*m)} ▲8%
+Profit: ${rs(16055*m)} (19%)
+Bills: ${Math.round(112*m)}
+Cash: ${rs(46475*m)}
+⚠ 2 low-stock, 1 expiring, Rs 9,600 khata overdue</div></div>`;
+  if(!adv())h+=`<div class="card appr small"><b style="color:var(--adv)">Advanced I</b> adds branches, approvals from your phone and staff alerts. <a class="btn sm a" onclick="S.tier='adv';render()">Preview</a></div>`;
+  return h};
+function tickHtml(){return sales.slice(0,4).map(s=>`<div class="row"><div><b>${rs(s.a)}</b><div class="small muted">Bill #${s.no} · ${s.by}</div></div><span class="muted small">${s.t}</span></div>`).join('')}
+setInterval(()=>{if(S.tab!=='home'||S.sheet)return;const m=new Date(2026,9,7,10,48+Math.floor((tickNo-2232)*1.3));sales.unshift({no:tickNo++,t:String(m.getHours()).padStart(2,'0')+':'+String(m.getMinutes()).padStart(2,'0'),a:Math.round((300+Math.random()*2800)/10)*10,by:['Saad','Usman','Imran'][tickNo%3]});sales=sales.slice(0,8);const e=$('#tick');if(e)e.innerHTML=tickHtml()},5000);
+
+V.alerts=()=>{
+  const list=alerts.filter(a=>adv()||!a.a).filter(a=>S.af==='all'||a.g===S.af);
+  let h=`<div class="chips ${adv()?'advmode':''}">${[['all','All'],['stock','Stock'],['money','Money'],['team','Staff & control']].map(([x,t])=>`<span class="chip ${S.af===x?'on':''}" onclick="S.af='${x}';render()">${t}</span>`).join('')}</div>`;
+  h+=list.map((a,ix)=>{
+    if(a.act==='appr1'&&S.a1)return '';if(a.act==='appr2'&&S.a2)return '';
+    const btn=a.act==='appr1'?`<button class="btn sm a" onclick="S.a1=1;S.pend--;toast('Approved');render()">Approve</button> <button class="btn sm" onclick="S.a1=1;S.pend--;toast('Rejected');render()">Reject</button>`
+      :a.act==='appr2'?`<button class="btn sm a" onclick="S.a2=1;S.pend--;toast('Approved');render()">Approve</button> <button class="btn sm" onclick="S.a2=1;S.pend--;toast('Rejected');render()">Reject</button>`
+      :a.act?`<button class="btn sm" onclick="doAct('${a.act[1]}')">${a.act[0]}</button>`:'';
+    return `<div class="card alert ${a.lv}"><b>${a.t}</b><div class="small muted">${a.s}</div><div style="margin-top:8px">${btn}</div></div>`}).join('');
+  if(!adv()&&(S.af==='all'||S.af==='team'))h+=`<div class="card appr lockc small">🔒 Staff & control alerts (voids, big discounts, cash shortages) and approvals are in <b>Advanced I</b></div>`;
+  h+=`<div class="card"><h3>Notify me when…</h3>${[['daily','Daily summary at 9 pm'],['low','Medicine runs low'],['exp','Medicine near expiry'],['disc','Large discount given',1],['void','Bill voided / deleted',1],['cash','Cash short at close',1]].map(([x,t,a])=>`<div class="row"><span>${t} ${a&&!adv()?'<span class="badge b-adv">Adv</span>':''}</span><span class="tog ${S.tg[x]&&(!a||adv())?'on':''}" onclick="${a&&!adv()?"toast('Available in Advanced I')":`S.tg.${x}^=1;render()`}"></span></div>`).join('')}</div>`;
+  return h};
+function doAct(a){if(a.startsWith('toast:'))return toast(a.slice(6));
+  if(a==='sheet:exp')S.sheet=`<h3 style="margin:0 0 6px">Expiring within 90 days</h3>${[['Flagyl 400mg','Oct 2026','Rs 1,520','Return to supplier'],['Calpol 120mg/5ml','Nov 2026','Rs 592','Sell first'],['Arinac Forte','Nov 2026','Rs 960','Sell first'],['Surbex Z','Dec 2026','Rs 2,048','Sell first'],['Amoxil 500mg','Dec 2026','Rs 1,344','Sell first']].map(r=>`<div class="row"><div><b>${r[0]}</b><div class="small muted">${r[1]} · ${r[3]}</div></div><b>${r[2]}</b></div>`).join('')}<br><button class="btn w" onclick="S.sheet=null;render()">Close</button>`;
+  if(a==='sheet:void')S.sheet=`<h3 style="margin:0 0 6px">Bill #2219 · voided</h3><div class="row"><span class="muted">When</span><b>07 Oct, 09:50</b></div><div class="row"><span class="muted">By</span><b>Saad Mehmood</b></div><div class="row"><span class="muted">Amount</span><b>Rs 2,100</b></div><div class="row"><span class="muted">Items</span><b>Brufen ×2, Risek ×1</b></div><div class="row"><span class="muted">Reason given</span><b>“Customer left”</b></div><br><button class="btn a w" onclick="S.sheet=null;toast('Marked as reviewed');render()">Mark reviewed</button>`;
+  render()}
+
+V.money=()=>{
+  const m=M(),s=2540000*m,c=2057400*m,ex=112300*m,sal=165000*m,np=s-c-ex-sal;
+  return `<div class="card"><h3>Net profit · September</h3><div class="hero"><div class="big">${rs(np)}</div></div><div class="small"><span class="up">▲ 2.8%</span> <span class="muted">vs August · you keep Rs ${(np/s*100).toFixed(1)} of every Rs 100 sold</span></div>
+   <div class="bars" style="margin-top:10px">${[171,184,192,199.7,205.3].map((v,i)=>`<div><i style="height:${v/205.3*58}px;${i===4?'background:var(--adv)':''}"></i>${['May','Jun','Jul','Aug','Sep'][i]}</div>`).join('')}</div></div>
+  <div class="card"><h3>Where the money went</h3>
+   <div class="stack"><i style="width:81%;background:var(--line)"></i><i style="width:4.4%;background:var(--warn)"></i><i style="width:6.5%;background:var(--bad)"></i><i style="width:8.1%;background:var(--ok)"></i></div>
+   <div class="row" style="margin-top:8px"><span><span class="badge" style="background:var(--line)">&nbsp;</span> Medicines bought</span><b>${rs(c)}</b></div>
+   <div class="row"><span><span class="badge b-warn">&nbsp;</span> Running expenses</span><b>${rs(ex)}</b></div>
+   <div class="row"><span><span class="badge b-bad">&nbsp;</span> Salaries</span><b>${rs(sal)}</b></div>
+   <div class="row"><span><span class="badge b-ok">&nbsp;</span> Profit</span><b>${rs(np)}</b></div></div>
+  <div class="card"><h3>Customers owe you · ${rs(15650*m)}</h3><div class="stack"><i style="width:16%;background:var(--ok)"></i><i style="width:27%;background:var(--warn)"></i><i style="width:57%;background:var(--bad)"></i></div>
+   <div class="small muted" style="margin-top:6px">🟢 0–15 days · 🟠 16–30 · 🔴 31+ days (<b>${rs(9600*m)}</b>)</div></div>
+  <div class="card"><h3>Coming up</h3>${[['12 Oct','Alpha Distributors',86000],['15 Oct','Medi Link Traders',42500],['25 Oct','City Pharma Wholesale',18200],['1 Nov','Shop rent',65000],['1 Nov','Salaries (4 staff)',165000]].map(r=>`<div class="row"><div><b>${r[1]}</b><div class="small muted">${r[0]}</div></div><b>${rs(r[2]*(r[1].startsWith('Shop')||r[1].startsWith('Sal')?1:m))}</b></div>`).join('')}</div>
+  <div class="card"><h3>Biggest expenses this month</h3>${[['Shop rent',65000],['Electricity',18400],['AC repair',7500],['Internet',3000]].map(r=>`<div class="row"><span>${r[0]}</span><b>${rs(r[1])}</b></div>`).join('')}</div>`};
+
+V.team=()=>{
+  return `<div class="card"><h3>Today</h3>${staff.map(s=>`<div class="row"><div><b>${s.n}</b><div class="small muted">${s.r}${adv()?' · '+(s.pres?'in at '+s.in:'<span class="dn">absent</span>'):''}</div></div><div style="text-align:right"><b>${rs(s.s*M())}</b><div class="small muted">${Math.round(s.b*M())} bills</div></div></div>`).join('')}</div>
+  <div class="card"><h3>Payroll · due 1 Nov</h3><div class="row" style="border:0;padding:0 0 4px"><b class="big" style="font-size:22px">${rs(staff.reduce((a,s)=>a+s.sal,0)+7000)}</b></div><div class="small muted">Salaries ${rs(staff.reduce((a,s)=>a+s.sal,0))} + bonuses Rs 7,000 · advances Rs 8,000 to recover</div><div style="margin-top:8px"><button class="btn sm" onclick="toast('Payroll sheet sent to your WhatsApp')">Send payroll sheet</button></div></div>
+  ${adv()?`<div class="card"><h3>Watch list</h3><div class="row"><div><b>Saad Mehmood</b><div class="small muted">7 voids and 3.4% discounts this month</div></div><span class="badge b-bad">Review</span></div><div class="row"><div><b>Imran Shah</b><div class="small muted">2 leave days this month</div></div><span class="badge b-warn">Absent today</span></div></div>
+   <div class="card"><h3>Approvals</h3><div class="row" style="border:0;padding:0"><span>${S.pend} waiting</span><button class="btn sm a" onclick="S.tab='alerts';S.af='team';render()">Open</button></div></div>`
+   :`<div class="card appr lockc small">🔒 Attendance, voids/discount tracking and approvals are in <b>Advanced I</b></div>`}`};
+
+V.br=()=>{const B=[['g','1st','b-ok',1270000,'+7.1%','19.4%',1],['j','2nd','b-warn',762000,'+4.0%','18.1%',3],['m','3rd','b-bad',508000,'−1.5%','16.8%',6]];
+  return `<div class="card"><h3>September sales · all branches</h3><div class="hero"><div class="big">${rs(2540000)}</div></div><div class="small up">▲ 6.3% <span class="muted">vs August</span></div></div>`+
+  B.map(b=>`<div class="card"><div class="row" style="border:0;padding:0 0 6px"><b>${BR[b[0]].n}</b><span class="badge ${b[2]}">${b[1]}</span></div>
+   <div class="row" style="border:0;padding:3px 0"><span class="muted">Sales</span><b>${rs(b[3])} <span class="small ${b[4][0]==='+'?'up':'dn'}">${b[4]}</span></b></div>
+   <div class="row" style="border:0;padding:3px 0"><span class="muted">Margin</span><b>${b[5]}</b></div>
+   <div class="row" style="border:0;padding:3px 0"><span class="muted">Open alerts</span><b>${b[6]}</b></div>
+   <div class="row" style="border:0;padding:3px 0"><span class="muted">Today</span><b>${rs(84500*BR[b[0]].m)}</b></div>
+   <button class="btn sm" style="margin-top:6px" onclick="S.branch='${b[0]}';S.tab='home';render()">Open ›</button></div>`).join('')+
+  `<div class="card appr small">Model Town is shrinking and has the highest expiry loss. Worth a visit this week.</div>`};
+
+function render(){head();nav();$('#body').innerHTML=V[S.tab]();
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tier));$('#seg').className='seg'+(adv()?' adv':'');
+  const old=$('.sheet');if(old)old.remove();
+  if(S.sheet){const d=document.createElement('div');d.className='sheet';d.onclick=e=>{if(e.target===d){S.sheet=null;render()}};d.innerHTML=`<div class="box">${S.sheet}</div>`;$('#phone').appendChild(d)}}
+render();
+</script>
+</body>
+</html>
